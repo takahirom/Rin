@@ -1,5 +1,5 @@
 # Rin (輪)
-"Rin" means "circle" in Japanese. It is a library that allows using `rememberRetained{}`, saved in ViewModel, in Compose Multiplatform.
+"Rin" means "circle" in Japanese. This library enhances Compose Multiplatform by enabling the use of `rememberRetained{}`, which is stored within ViewModel. It broadens the versatility of Compose, allowing it to be utilized in a wider array of contexts and scenarios.
 
 ## Motivation
 
