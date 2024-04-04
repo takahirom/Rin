@@ -113,11 +113,11 @@ Work in progress
 ## how do i build it?
 
 1. - [x] clone this repository ot just [use it as template](https://github.com/kotlin/multiplatform-library-template/generate)
-1. - [ ] edit library module name and include it in [`settings.gradle.kts`](settings.gradle.kts#l18)
-1. - [ ] Edit [`groupId` and `version`](convention-plugins/src/main/kotlin/module.publication.gradle.kts#L10-L11)
+1. - [x] edit library module name and include it in [`settings.gradle.kts`](settings.gradle.kts#l18)
+1. - [x] Edit [`groupId` and `version`](convention-plugins/src/main/kotlin/module.publication.gradle.kts#L10-L11)
     1. If you need the Android support update namespace [there](library/build.gradle.kts#L38) too
     1. If you don't need an Android support delete the [`android` section](library/build.gradle.kts#L37-L43)
-1. - [ ] Edit [build targets you need](library/build.gradle.kts#L9-L21)
+1. - [x] Edit [build targets you need](library/build.gradle.kts#L9-L21)
 
 At this stage, you have everything set to work with Kotlin Multiplatform. The project should be buildable (but you might need to provide actual starting values for the platforms you need).
 
@@ -131,16 +131,16 @@ Also, currently, it only runs tests, but you can change this behaviour as you wi
 
 The most part of the job is already automated for you. However, deployment to Maven Central requires some manual work from your side. 
 
-1. - [ ] Create an account at [Sonatype issue tracker](https://issues.sonatype.org/secure/Signup!default.jspa)
-1. - [ ] [Create an issue](https://issues.sonatype.org/secure/CreateIssue.jspa?issuetype=21&pid=10134) to create new project for you
-1. - [ ] You will have to prove that you own your desired namespace
-1. - [ ] Create a GPG key with `gpg --gen-key`, use the same email address you used to sign up to the Sonatype Jira
-1. - [ ] Find your key id in the output of the previous command looking like `D89FAAEB4CECAFD199A2F5E612C6F735F7A9A519`
-1. - [ ] Upload your key to a keyserver, for example 
+1. - [x] Create an account at [Sonatype issue tracker](https://issues.sonatype.org/secure/Signup!default.jspa)
+1. - [x] [Create an issue](https://issues.sonatype.org/secure/CreateIssue.jspa?issuetype=21&pid=10134) to create new project for you
+1. - [x] You will have to prove that you own your desired namespace
+1. - [x] Create a GPG key with `gpg --gen-key`, use the same email address you used to sign up to the Sonatype Jira
+1. - [x] Find your key id in the output of the previous command looking like `D89FAAEB4CECAFD199A2F5E612C6F735F7A9A519`
+1. - [x] Upload your key to a keyserver, for example 
     ```bash
     gpg --send-keys --keyserver keyserver.ubuntu.com "<your key id>"
     ```
-1. - [ ] Now you should create secrets available to your GitHub Actions
+1. - [x] Now you should create secrets available to your GitHub Actions
     1. via `gh` command
     ```bash
     gh secret set OSSRH_GPG_SECRET_KEY -a actions --body "$(gpg --export-secret-key --armor "<your key id>")"

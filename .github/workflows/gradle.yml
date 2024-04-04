@@ -28,7 +28,7 @@ jobs:
             os: ubuntu-latest
 #          - target: linuxX64Test
 #            os: ubuntu-latest
-          - target: testDebugUnitTest
+          - target: pixel2api30DebugAndroidTest
             os: ubuntu-latest
           - target: testReleaseUnitTest
             os: ubuntu-latest
