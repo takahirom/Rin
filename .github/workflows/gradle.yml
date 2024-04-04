@@ -28,7 +28,7 @@ jobs:
             os: ubuntu-latest
 #          - target: linuxX64Test
 #            os: ubuntu-latest
-          - target: pixel2api30DebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --no-watch-fs --stacktrace
+          - target: nexusOneDebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --no-watch-fs --stacktrace
             os: ubuntu-latest
           - target: testReleaseUnitTest
             os: ubuntu-latest

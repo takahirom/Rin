@@ -84,13 +84,12 @@ android {
     testOptions {
         managedDevices {
             localDevices {
-                create("pixel2api30") {
+                create("nexusOne") {
                     // Use device profiles you typically see in Android Studio.
-                    device = "Pixel 2"
+                    device = "Nexus One"
                     // Use only API levels 27 and higher.
-                    apiLevel = 30
-                    // To include Google services, use "google".
-                    systemImageSource = "aosp"
+                    apiLevel = 33
+                    systemImageSource = "aosp-atd"
                 }
             }
         }
