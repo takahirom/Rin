@@ -81,17 +81,18 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    testOptions {
-        managedDevices {
-            localDevices {
-                create("nexusOne") {
-                    // Use device profiles you typically see in Android Studio.
-                    device = "Nexus One"
-                    // Use only API levels 27 and higher.
-                    apiLevel = 33
-                    systemImageSource = "aosp-atd"
-                }
-            }
-        }
-    }
+    // Wait for AGP update
+//    testOptions {
+//        managedDevices {
+//            localDevices {
+//                create("nexusOne") {
+//                    // Use device profiles you typically see in Android Studio.
+//                    device = "Nexus One"
+//                    // Use only API levels 27 and higher.
+//                    apiLevel = 33
+//                    systemImageSource = "aosp-atd"
+//                }
+//            }
+//        }
+//    }
 }

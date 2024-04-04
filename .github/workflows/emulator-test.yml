@@ -19,23 +19,17 @@ permissions:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        include:
-          - target: iosSimulatorArm64Test
-            os: macos-latest
-          - target: jvmTest
-            os: ubuntu-latest
-#          - target: linuxX64Test
-#            os: ubuntu-latest
-          - target: testReleaseUnitTest
-            os: ubuntu-latest
     runs-on: ${{ matrix.os }}
-
     steps:
     - uses: actions/checkout@v3
     - name: Validate Gradle Wrapper
       uses: gradle/wrapper-validation-action@v1
+    - name: Enable KVM group perms
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
     - uses: actions/cache@v3
       with:
         path: |
@@ -46,7 +40,12 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@ce999babab2de1c4b649dc15f0ee67e6246c994f
+    - name: Build projects and run instrumentation tests
+      uses: reactivecircus/android-emulator-runner@v2
       with:
-        arguments: ${{ matrix.target }}
+        api-level: 30
+        arch: x86_64
+        disable-animations: true
+        disk-size: 6000M
+        heap-size: 600M
+        script: ./gradlew connectedDemoDebugAndroidTest --daemon
