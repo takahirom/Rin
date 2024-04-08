@@ -71,6 +71,12 @@ kotlin {
                 implementation(libs.leakcanary.android.instrumentation)
             }
         }
+
+        @OptIn(ExperimentalComposeLibrary::class) val iosTest by getting {
+            dependencies {
+                implementation(compose.dependencies.uiTest)
+            }
+        }
     }
 }
 

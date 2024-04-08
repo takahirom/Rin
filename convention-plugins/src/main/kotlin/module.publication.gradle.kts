@@ -19,8 +19,8 @@ publishing {
         // Provide artifacts information required by Maven Central
         pom {
             name.set("Rin")
-            description.set("It is a library that lets you use `rememberRetained{}` in Compose Multiplatform.")
-            url.set("https://github.com/Kotlin/multiplatform-library-template")
+            description.set("This library enhances Compose Multiplatform by enabling the use of `rememberRetained{}`, which is stored within ViewModel. It broadens the versatility of Compose, allowing it to be utilized in a wider array of contexts and scenarios.")
+            url.set("https://github.com/takahirom/Rin")
 
             licenses {
                 license {

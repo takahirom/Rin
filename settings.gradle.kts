@@ -25,4 +25,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Rin"
-include(":library")
+include(":rin")

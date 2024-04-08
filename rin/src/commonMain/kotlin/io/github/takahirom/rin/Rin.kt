@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-var RIN_DEBUG = false
+var RIN_DEBUG = true
 
 private class ProduceRetainedStateScopeImpl<T>(
     state: MutableState<T>,
@@ -95,6 +95,7 @@ fun <T : Any> rememberRetained(
         viewModel
     }) as RinViewModel
     val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleOwnerHash = lifecycleOwner.hashCode().toString(36)
     val removeRetainedWhenRemovingComposition = LocalShouldRemoveRetainedWhenRemovingComposition.current
 
     val result = remember(lifecycleOwner, keyToUse) {
@@ -126,7 +127,7 @@ fun <T : Any> rememberRetained(
         }
     }.result as T
     SideEffect {
-        rinViewModel.onSideEffect(removeRetainedWhenRemovingComposition(lifecycleOwner))
+        rinViewModel.onNewSideEffect(removeRetainedWhenRemovingComposition(lifecycleOwner), lifecycleOwnerHash)
     }
     return result
 }
@@ -134,7 +135,7 @@ fun <T : Any> rememberRetained(
 internal class RinViewModel : ViewModel() {
 
     internal val savedData = mutableMapOf<String, ArrayDeque<RinViewModelEntity<Any?>>>()
-    internal val rememberedData = mutableMapOf<String, ArrayDeque<RinViewModelEntity<Any?>>>()
+    private val rememberedData = mutableMapOf<String, ArrayDeque<RinViewModelEntity<Any?>>>()
 
     init {
         log { "RinViewModel($this): created" }
@@ -142,7 +143,7 @@ internal class RinViewModel : ViewModel() {
 
     fun consume(key: String): Any? {
         val value = (savedData[key])?.removeFirstOrNull()?.value
-        log { "RinViewModel: consume key:$key value:$value savedData:$savedData" }
+        log { "RinViewModel($this): consume key:$key value:$value savedData:$savedData" }
         return value
     }
 
@@ -165,7 +166,7 @@ internal class RinViewModel : ViewModel() {
 
         element.onRemember()
 
-        log { "RinViewModel: onRemembered $key $element $isRestored" }
+        log { "RinViewModel: onRemembered key:$key element:$element isRestored:$isRestored" }
     }
 
     override fun onCleared() {
@@ -177,7 +178,13 @@ internal class RinViewModel : ViewModel() {
     }
 
     fun onForget(key: String, canRemove: Boolean) {
-        log { "RinViewModel: onForget key:$key canRemove:$canRemove" }
+        log {
+            "RinViewModel($this): onForget key:$key canRemove:$canRemove isInRemember{${rememberedData.contains(key)}} isInSaved:{${
+                savedData.contains(
+                    key
+                )
+            }}"
+        }
         if (!canRemove) {
             return
         }
@@ -188,12 +195,16 @@ internal class RinViewModel : ViewModel() {
         savedData.remove(key)
     }
 
-    fun onSideEffect(canRemove: Boolean) {
+    private var lastLifecycleOwnerHash = ""
+
+    fun onNewSideEffect(canRemove: Boolean, lifecycleOwnerHash: String) {
         if (rememberedData.isEmpty()) {
             return
         }
         val tmp = savedData.toList()
-        if (canRemove) {
+        if (canRemove && lastLifecycleOwnerHash != lifecycleOwnerHash) {
+            // If recomposition we don't remove the saved data
+            lastLifecycleOwnerHash = lifecycleOwnerHash
             clearSavedData()
         }
         savedData.putAll(rememberedData)

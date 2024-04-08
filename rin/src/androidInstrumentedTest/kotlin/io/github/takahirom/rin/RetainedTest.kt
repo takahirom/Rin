@@ -13,10 +13,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.test.core.app.ActivityScenario
 import com.google.common.truth.Truth
@@ -261,6 +258,50 @@ class RetainedTest {
         composeTestRule.onNodeWithTag(TAG_RETAINED_1).assertTextContains("")
     }
 
+
+    @Test
+    fun oneRootRecompose() {
+        val mutableState = mutableStateOf(1)
+        val content =
+            @Composable {
+                Column {
+                    RecomposingRow(1, mutableState.value)
+                    RecomposingRow(2, mutableState.value)
+                }
+            }
+        setActivityContent(content)
+
+        composeTestRule.onNodeWithTag("button1").performClick()
+        composeTestRule.onNodeWithText("Retained1").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Retained2").assertDoesNotExist()
+        composeTestRule.onNodeWithTag("button2").performClick()
+        composeTestRule.onNodeWithText("Retained1").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Retained2").assertIsDisplayed()
+
+        scenario.recreate()
+        setActivityContent(content)
+
+        composeTestRule.onNodeWithText("Retained2").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Retained1").assertIsDisplayed()
+    }
+
+    @Composable
+    private fun RecomposingRow(i: Int, recomposeInt: Int) {
+        Row {
+            println("recompose $i $recomposeInt")
+            var retained by rememberRetained("key $i") { mutableStateOf<Boolean>(false) }
+            Button(
+                modifier = Modifier.testTag("button$i"),
+                onClick = { retained = !retained }) {
+                Text("Toggle$i")
+            }
+            if (retained) {
+                val retained = rememberRetained("key $i inner") { mutableStateOf("Retained inner $i") }
+                Text("Retained$i")
+            }
+        }
+    }
+
     @Test
     fun recreateWithChangingInput() {
         val inputState = MutableStateFlow("first input")
@@ -493,10 +534,8 @@ class RetainedTest {
         composeTestRule.onNodeWithTag(TAG_RETAINED_1).assertTextContains("Text_Retained1")
         composeTestRule.onNodeWithTag(TAG_RETAINED_2).assert(!hasText("Text_Retained2"))
 
-        println("recreate")
         // Restart the activity
         scenario.recreate()
-        println("setcontent")
         // Compose our content
         setActivityContent(content)
         // Was the text not saved
@@ -548,20 +587,20 @@ private const val TAG_BUTTON_SHOW = "btn_show"
 private const val TAG_BUTTON_HIDE = "btn_hide"
 
 @Composable
-private fun KeyContent(key: String?) {
+private fun KeyContent(key: String?, tag1: String = TAG_REMEMBER, tag2: String = TAG_RETAINED_1) {
     var text1 by remember { mutableStateOf("") }
     // By default rememberSavable uses it's line number as its key, this doesn't seem
     // to work when testing, instead pass a key
     var retainedText: String by rememberRetained(key = key) { mutableStateOf("") }
     Column {
         TextField(
-            modifier = Modifier.testTag(TAG_REMEMBER),
+            modifier = Modifier.testTag(tag1),
             value = text1,
             onValueChange = { text1 = it },
             label = {},
         )
         TextField(
-            modifier = Modifier.testTag(TAG_RETAINED_1),
+            modifier = Modifier.testTag(tag2),
             value = retainedText,
             onValueChange = { retainedText = it },
             label = {},
@@ -633,10 +672,22 @@ private fun NestedRetainLevel1(useKeys: Boolean) {
         label = {},
     )
 
-    val nestedRegistryLevel2 = rememberRetained { ViewModelStore() }
-    CompositionLocalProvider(LocalViewModelStoreOwner provides object : ViewModelStoreOwner {
-        override val viewModelStore: ViewModelStore = nestedRegistryLevel2
-    }) {
+    val nestedRegistry = rememberRetained {
+        object : ViewModelStoreOwner {
+            override val viewModelStore: ViewModelStore = ViewModelStore()
+        }
+    }
+    val lifecycleRegistry = rememberRetained {
+        object:LifecycleOwner {
+            override val lifecycle: Lifecycle
+                get() = LifecycleRegistry(this)
+
+        }
+    }
+    CompositionLocalProvider(
+        LocalViewModelStoreOwner provides nestedRegistry,
+        LocalLifecycleOwner provides lifecycleRegistry,
+    ) {
         NestedRetainLevel2(useKeys)
     }
 }
@@ -688,11 +739,20 @@ private fun NestedRetainWithPushAndPop(useKeys: Boolean) {
             LocalShouldRemoveRetainedWhenRemovingComposition provides { false },
         ) {
             if (showNestedContent.value) {
-                val nestedRegistry = rememberRetained { ViewModelStore() }
+                val nestedRegistry = rememberRetained {
+                    object : ViewModelStoreOwner {
+                        override val viewModelStore: ViewModelStore = ViewModelStore()
+                    }
+                }
+                val lifecycleRegistry = rememberRetained {
+                    object:LifecycleOwner {
+                        override val lifecycle: Lifecycle = LifecycleRegistry(this)
+
+                    }
+                }
                 CompositionLocalProvider(
-                    LocalViewModelStoreOwner provides object : ViewModelStoreOwner {
-                        override val viewModelStore: ViewModelStore = nestedRegistry
-                    },
+                    LocalViewModelStoreOwner provides nestedRegistry,
+                    LocalLifecycleOwner provides lifecycleRegistry,
                 ) {
                     NestedRetainLevel1(useKeys)
                 }
