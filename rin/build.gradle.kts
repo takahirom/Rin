@@ -75,6 +75,8 @@ kotlin {
         @OptIn(ExperimentalComposeLibrary::class) val iosTest by getting {
             dependencies {
                 implementation(compose.dependencies.uiTest)
+                implementation(libs.jetbrains.androidx.navigation.compose)
+                implementation(compose.dependencies.material3)
             }
         }
     }
