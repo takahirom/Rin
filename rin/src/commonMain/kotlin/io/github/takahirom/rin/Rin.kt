@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-var RIN_DEBUG = true
+var RIN_DEBUG = false
 
 private class ProduceRetainedStateScopeImpl<T>(
     state: MutableState<T>,

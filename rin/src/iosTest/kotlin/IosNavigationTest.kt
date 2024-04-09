@@ -5,25 +5,62 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.*
 import kotlin.test.Test
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import app.cash.molecule.RecompositionMode
+import app.cash.molecule.launchMolecule
 import io.github.takahirom.rin.RetainedObserver
 import io.github.takahirom.rin.RinViewModel
 import io.github.takahirom.rin.rememberRetained
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.test.assertEquals
 
 private const val TAG_REMEMBER = "remember"
 private const val TAG_RETAINED_1 = "retained1"
 
 class IosNavigationTest {
+    @OptIn(InternalComposeApi::class)
+    @Test
+    fun test() {
+        assertEquals(
+            expected = "test",
+            actual = CoroutineScope(Job()).launchMolecule(RecompositionMode.Immediate) {
+                val nestedRegistry = remember {
+                    object : ViewModelStoreOwner {
+                        override val viewModelStore: ViewModelStore = ViewModelStore()
+                    }
+                }
+                val lifecycleRegistry = remember {
+                    object : LifecycleOwner {
+                        override val lifecycle: Lifecycle = LifecycleRegistry(this)
+                    }
+                }
+                CompositionLocalProviderWithReturnValue(LocalViewModelStoreOwner provides nestedRegistry) {
+                    CompositionLocalProviderWithReturnValue(LocalLifecycleOwner provides lifecycleRegistry) {
+                        var retainedText: String by rememberRetained { mutableStateOf("test") }
+                        retainedText
+                    }
+                }
+            }.value
+        )
+    }
+    @Composable
+    @OptIn(InternalComposeApi::class)
+    fun <T> CompositionLocalProviderWithReturnValue(
+        value: ProvidedValue<*>,
+        content: @Composable () -> T,
+    ): T {
+        currentComposer.startProvider(value)
+        val result = content()
+        currentComposer.endProvider()
+        return result
+    }
 
     @Composable
     private fun KeyContent(key: String?) {

@@ -77,6 +77,7 @@ kotlin {
                 implementation(compose.dependencies.uiTest)
                 implementation(libs.jetbrains.androidx.navigation.compose)
                 implementation(compose.dependencies.material3)
+                implementation(libs.molecule.runtime)
             }
         }
     }
