@@ -20,15 +20,15 @@ jobs:
     strategy:
       matrix:
         include:
-          - target: publishIosArm64PublicationToSonatypeRepository
+          - target: publishIosArm64PublicationToSonatypeRepository --no-configuration-cache
             os: macos-latest
-          - target: publishAndroidReleasePublicationToSonatypeRepository
+          - target: publishAndroidReleasePublicationToSonatypeRepository --no-configuration-cache
             os: ubuntu-latest
-          - target: publishJvmPublicationToSonatypeRepository
+          - target: publishJvmPublicationToSonatypeRepository --no-configuration-cache
             os: ubuntu-latest
 #          - target: publishLinuxX64PublicationToSonatypeRepository
 #            os: ubuntu-latest
-          - target: publishKotlinMultiplatformPublicationToSonatypeRepository
+          - target: publishKotlinMultiplatformPublicationToSonatypeRepository --no-configuration-cache
             os: ubuntu-latest
     runs-on: ${{ matrix.os }}
     steps:
