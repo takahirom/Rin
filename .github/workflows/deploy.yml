@@ -26,6 +26,8 @@ jobs:
         include:
           - target: publishIosArm64PublicationToSonatypeRepository --no-configuration-cache
             os: macos-latest
+          - target: publishIosX64PublicationToSonatypeRepository --no-configuration-cache
+            os: macos-latest
           - target: publishAndroidReleasePublicationToSonatypeRepository --no-configuration-cache
             os: ubuntu-latest
           - target: publishJvmPublicationToSonatypeRepository --no-configuration-cache
