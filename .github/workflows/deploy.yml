@@ -50,8 +50,9 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Gradle publish
+    - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
+    - name: Run Gradle publish
       run: |
         ./gradlew \
         ${{ matrix.target }} \
