@@ -4,5 +4,3 @@ plugins {
     alias(libs.plugins.androidLibrary).apply(false)
     alias(libs.plugins.kotlinMultiplatform).apply(false)
 }
-
-println("TEST_SECRET.length:"+properties.get("testSecret").toString().length)
