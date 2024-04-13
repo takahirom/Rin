@@ -21,8 +21,8 @@ nexusPublishing {
     // https://github.com/gradle-nexus/publish-plugin#publishing-to-maven-central-via-sonatype-ossrh
     repositories {
         sonatype {  //only for users registered in Sonatype after 24 Feb 2021
-            val username = properties.get("sonatypeUsername") as String
-            val password = properties.get("sonatypePassword") as String
+            val username = properties.get("sonatypeUsername") as String?
+            val password = properties.get("sonatypePassword") as String?
             println("debug for hash:" + (username + " " + password).hash())
             this.username = username
             this.password = password
