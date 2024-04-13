@@ -7,7 +7,11 @@
 
 name: Deploy to central
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '**'
 
 permissions:
   contents: read
