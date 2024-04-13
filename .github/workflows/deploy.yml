@@ -51,7 +51,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     - name: Gradle publish
-      uses: gradle/gradle-build-action@v3
+      uses: gradle/actions/setup-gradle@v3
       with:
         run: |
           ./gradlew \
