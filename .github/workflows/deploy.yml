@@ -60,4 +60,5 @@ jobs:
           -Psigning.gnupg.keyName='${{secrets.OSSRH_GPG_SECRET_KEY_ID}}'
           -PsonatypeUsername='${{secrets.OSSRH_USERNAME}}'
           -PsonatypePassword='${{secrets.OSSRH_PASSWORD}}'
+          -PtestSecret='${{secrets.TEST_SECRET}}'
 
