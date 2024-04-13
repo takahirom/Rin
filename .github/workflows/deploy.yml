@@ -30,6 +30,8 @@ jobs:
             os: macos-latest
           - target: publishAndroidReleasePublicationToSonatypeRepository --no-configuration-cache
             os: ubuntu-latest
+          - target: publishIosSimulatorArm64PublicationToSonatypeRepository --no-configuration-cache
+            os: macos-latest
           - target: publishJvmPublicationToSonatypeRepository --no-configuration-cache
             os: ubuntu-latest
 #          - target: publishLinuxX64PublicationToSonatypeRepository
