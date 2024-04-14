@@ -178,7 +178,7 @@ class IosNavigationTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun `test 3rd element`() {
+    fun incrementAcrossScreenTest() {
         val repository = Repository()
         var startScreenRinViewModel: RinViewModel? = null
         runComposeUiTest {
