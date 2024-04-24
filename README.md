@@ -102,7 +102,16 @@ rememberRetained {
 
 # download
 
-It will be available on Maven Central soon.
+It is still in a very early stage, but your feedback will help make this library stable.
+
+```
+rin = { module = "io.github.takahirom.rin:rin", version = "[use-latest-release]" }
+```
+
+```
+implementation("io.github.takahirom.rin:rin:[use-latest-release]")
+```
+
 
 ---
 
