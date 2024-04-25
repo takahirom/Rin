@@ -24,6 +24,11 @@ import kotlin.test.assertEquals
 private const val TAG_REMEMBER = "remember"
 private const val TAG_RETAINED_1 = "retained1"
 
+internal fun ViewModelStore.rinViewModel(): RinViewModel {
+    return get("androidx.lifecycle.ViewModelProvider.DefaultKey:io.github.takahirom.rin.RinViewModel") as RinViewModel
+}
+
+
 class IosNavigationTest {
     @OptIn(InternalComposeApi::class)
     @Test
@@ -197,7 +202,7 @@ class IosNavigationTest {
                                         }.mutableState.value
 
                                         startScreenRinViewModel =
-                                            LocalViewModelStoreOwner.current!!.viewModelStore.get("RinViewModel") as RinViewModel
+                                            LocalViewModelStoreOwner.current!!.viewModelStore.rinViewModel()
                                         Text(state)
                                         Button(onClick = {
                                             repository.increment()
