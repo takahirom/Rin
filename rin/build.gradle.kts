@@ -89,6 +89,9 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // For testing, without this, the test will fail with the error:
+        // new target SDK 21 doesn't support runtime permissions but the old target SDK 24 does
+        targetSdkVersion(libs.versions.android.targetSdk.get().toInt())
     }
     // Wait for AGP update
 //    testOptions {
