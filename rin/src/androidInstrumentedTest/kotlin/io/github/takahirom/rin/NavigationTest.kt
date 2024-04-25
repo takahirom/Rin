@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.ViewModelStore
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -23,6 +24,10 @@ import leakcanary.DetectLeaksAfterTestSuccess.Companion.detectLeaksAfterTestSucc
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
+
+internal fun ViewModelStore.rinViewModel(): RinViewModel {
+    return get("androidx.lifecycle.ViewModelProvider.DefaultKey:io.github.takahirom.rin.RinViewModel") as RinViewModel
+}
 
 class NavigationTest {
     private val composeTestRule = createAndroidComposeRule<ComponentActivity>()
@@ -126,7 +131,7 @@ class NavigationTest {
                                         }
                                 }
                                 startScreenRinViewModel =
-                                    LocalViewModelStoreOwner.current!!.viewModelStore.get("RinViewModel") as RinViewModel
+                                    LocalViewModelStoreOwner.current!!.viewModelStore.rinViewModel()
                                 Text(state)
                                 Button(onClick = {
                                     repository.increment()
@@ -220,7 +225,7 @@ class NavigationTest {
                                 }.mutableState.value
 
                                 startScreenRinViewModel =
-                                    LocalViewModelStoreOwner.current!!.viewModelStore.get("RinViewModel") as RinViewModel
+                                    LocalViewModelStoreOwner.current!!.viewModelStore.rinViewModel()
                                 Text(state)
                                 Button(onClick = {
                                     repository.increment()

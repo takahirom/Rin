@@ -1,16 +1,17 @@
 package io.github.takahirom.rin
 
 import androidx.compose.runtime.*
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.CoroutineContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
 var RIN_DEBUG = false
@@ -87,13 +88,12 @@ fun <T : Any> rememberRetained(
 ): T {
     // Caution: currentCompositeKeyHash is not unique so we need to store multiple values with the same key
     val keyToUse: String = key ?: currentCompositeKeyHash.toString(36)
-    // Wait for https://github.com/JetBrains/compose-multiplatform-core/blob/jb-main/lifecycle/lifecycle-viewmodel-compose/src/commonMain/kotlin/androidx/lifecycle/viewmodel/compose/ViewModel.kt#L21C5-L22C1
-    val viewModelStoreOwner = LocalViewModelStoreOwner.current!!
-    val rinViewModel: RinViewModel = (viewModelStoreOwner.viewModelStore.get("RinViewModel") ?: run {
-        val viewModel = RinViewModel()
-        viewModelStoreOwner.viewModelStore.put("RinViewModel", viewModel)
-        viewModel
-    }) as RinViewModel
+    val viewModelFactory = remember {
+        viewModelFactory {
+            addInitializer(RinViewModel::class) { RinViewModel() }
+        }
+    }
+    val rinViewModel: RinViewModel = viewModel(modelClass = RinViewModel::class, factory = viewModelFactory)
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycleOwnerHash = lifecycleOwner.hashCode().toString(36)
     val removeRetainedWhenRemovingComposition = LocalShouldRemoveRetainedWhenRemovingComposition.current

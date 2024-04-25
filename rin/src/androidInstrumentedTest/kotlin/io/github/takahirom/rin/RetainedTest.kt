@@ -76,7 +76,7 @@ class RetainedTest {
         }
 
         // Hold on to our Continuity instance
-        val continuity = composeTestRule.activity.viewModelStore.get("RinViewModel") as RinViewModel
+        val continuity = composeTestRule.activity.viewModelStore.rinViewModel()
 
         // We now have one list with three retained values
         // - text2Enabled
@@ -151,7 +151,7 @@ class RetainedTest {
         }
 
         // Hold on to our Continuity instance
-        val continuity = composeTestRule.activity.viewModelStore.get("RinViewModel") as RinViewModel
+        val continuity = composeTestRule.activity.viewModelStore.rinViewModel()
 
         // We now have one list with three retained values
         // - text2Enabled

@@ -24,13 +24,19 @@ import kotlin.test.assertEquals
 private const val TAG_REMEMBER = "remember"
 private const val TAG_RETAINED_1 = "retained1"
 
+internal fun ViewModelStore.rinViewModel(): RinViewModel {
+    return get("androidx.lifecycle.ViewModelProvider.DefaultKey:io.github.takahirom.rin.RinViewModel") as RinViewModel
+}
+
+
 class IosNavigationTest {
     @OptIn(InternalComposeApi::class)
     @Test
-    fun test() {
+    fun moleculeTest() {
+        val coroutineScope = CoroutineScope(Job())
         assertEquals(
             expected = "test",
-            actual = CoroutineScope(Job()).launchMolecule(RecompositionMode.Immediate) {
+            actual = coroutineScope.launchMolecule(RecompositionMode.Immediate) {
                 val nestedRegistry = remember {
                     object : ViewModelStoreOwner {
                         override val viewModelStore: ViewModelStore = ViewModelStore()
@@ -49,7 +55,9 @@ class IosNavigationTest {
                 }
             }.value
         )
+        coroutineScope.cancel()
     }
+
     @Composable
     @OptIn(InternalComposeApi::class)
     fun <T> CompositionLocalProviderWithReturnValue(
@@ -72,7 +80,9 @@ class IosNavigationTest {
             TextField(
                 modifier = Modifier.testTag(TAG_REMEMBER),
                 value = text1,
-                onValueChange = { text1 = it },
+                onValueChange = {
+                    text1 = it
+                },
                 label = {},
             )
             TextField(
@@ -197,7 +207,7 @@ class IosNavigationTest {
                                         }.mutableState.value
 
                                         startScreenRinViewModel =
-                                            LocalViewModelStoreOwner.current!!.viewModelStore.get("RinViewModel") as RinViewModel
+                                            LocalViewModelStoreOwner.current!!.viewModelStore.rinViewModel()
                                         Text(state)
                                         Button(onClick = {
                                             repository.increment()
