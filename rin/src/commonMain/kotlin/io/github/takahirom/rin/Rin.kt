@@ -8,6 +8,7 @@ import kotlin.coroutines.CoroutineContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
@@ -87,13 +88,7 @@ fun <T : Any> rememberRetained(
 ): T {
     // Caution: currentCompositeKeyHash is not unique so we need to store multiple values with the same key
     val keyToUse: String = key ?: currentCompositeKeyHash.toString(36)
-    // Wait for https://github.com/JetBrains/compose-multiplatform-core/blob/jb-main/lifecycle/lifecycle-viewmodel-compose/src/commonMain/kotlin/androidx/lifecycle/viewmodel/compose/ViewModel.kt#L21C5-L22C1
-    val viewModelStoreOwner = LocalViewModelStoreOwner.current!!
-    val rinViewModel: RinViewModel = (viewModelStoreOwner.viewModelStore.get("RinViewModel") ?: run {
-        val viewModel = RinViewModel()
-        viewModelStoreOwner.viewModelStore.put("RinViewModel", viewModel)
-        viewModel
-    }) as RinViewModel
+    val rinViewModel: RinViewModel = viewModel(RinViewModel::class)
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycleOwnerHash = lifecycleOwner.hashCode().toString(36)
     val removeRetainedWhenRemovingComposition = LocalShouldRemoveRetainedWhenRemovingComposition.current
