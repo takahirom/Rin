@@ -32,10 +32,11 @@ internal fun ViewModelStore.rinViewModel(): RinViewModel {
 class IosNavigationTest {
     @OptIn(InternalComposeApi::class)
     @Test
-    fun test() {
+    fun moleculeTest() {
+        val coroutineScope = CoroutineScope(Job())
         assertEquals(
             expected = "test",
-            actual = CoroutineScope(Job()).launchMolecule(RecompositionMode.Immediate) {
+            actual = coroutineScope.launchMolecule(RecompositionMode.Immediate) {
                 val nestedRegistry = remember {
                     object : ViewModelStoreOwner {
                         override val viewModelStore: ViewModelStore = ViewModelStore()
@@ -54,7 +55,9 @@ class IosNavigationTest {
                 }
             }.value
         )
+        coroutineScope.cancel()
     }
+
     @Composable
     @OptIn(InternalComposeApi::class)
     fun <T> CompositionLocalProviderWithReturnValue(
@@ -73,11 +76,16 @@ class IosNavigationTest {
         // By default rememberSavable uses it's line number as its key, this doesn't seem
         // to work when testing, instead pass a key
         var retainedText: String by rememberRetained(key = key) { mutableStateOf("") }
+        println("KeyContent $key $retainedText $text1")
         Column {
             TextField(
                 modifier = Modifier.testTag(TAG_REMEMBER),
                 value = text1,
-                onValueChange = { text1 = it },
+                onValueChange = {
+                    println("onValueChange current:$text1 new:$it")
+//                    RuntimeException().printStackTrace()
+                    text1 = it
+                },
                 label = {},
             )
             TextField(
@@ -134,19 +142,30 @@ class IosNavigationTest {
             onNodeWithTag(TAG_REMEMBER).assertTextContains("Text_Remember")
             onNodeWithTag(TAG_RETAINED_1).assertTextContains("Text_Retained")
 
+            println("0")
             onNodeWithText("Next").performClick()
 
+            println("1")
+
+//            onRoot().printToLog("Root")
+//            onNodeWithTag(TAG_REMEMBER).fetchSemanticsNode()
+            println("1.25")
             onNodeWithTag(TAG_REMEMBER).assertTextContains("")
+            println("1.5")
             onNodeWithTag(TAG_RETAINED_1).assertTextContains("")
+            println("2")
 
             onNodeWithTag(TAG_REMEMBER).performTextInput("Text_Remember2")
             onNodeWithTag(TAG_RETAINED_1).performTextInput("Text_Retained2")
+            println("3")
 
             onNodeWithTag(TAG_REMEMBER).assertTextContains("Text_Remember2")
             onNodeWithTag(TAG_RETAINED_1).assertTextContains("Text_Retained2")
+            println("4")
 
             onNodeWithText("Back").performClick()
 
+            println("5")
             onNodeWithTag(TAG_REMEMBER).assertTextContains("")
             onNodeWithTag(TAG_RETAINED_1).assertTextContains("Text_Retained")
         }
