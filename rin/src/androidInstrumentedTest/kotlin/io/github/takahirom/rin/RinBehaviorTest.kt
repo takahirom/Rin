@@ -155,7 +155,6 @@ class RinBehaviorTest {
         val all = listOf("RememberRetained", "ViewModel", "Remember")
 
         all.forEach {
-            composeTestRule.onRoot().printToLog("Root b$it")
             composeTestRule.onNodeWithTag("b$it").performClick()
         }
         all.forEach {
@@ -180,8 +179,6 @@ class RinBehaviorTest {
         composeTestRule.onNodeWithText("Next").performClick()
 
         composeTestRule.onNodeWithText("Back").performClick()
-
-        composeTestRule.onRoot().printToLog("Root end2")
 
         composeTestRule.onNodeWithText("aRememberRetained: 3").assertIsDisplayed()
         composeTestRule.onNodeWithText("aViewModel: 1").assertIsDisplayed()
