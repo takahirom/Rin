@@ -20,6 +20,59 @@ This made me wonder: What if we applied Circuit's `rememberRetained{}` approach 
 
 Compose Multiplatform's Navigation feature includes a `NavBackStackEntry` object equipped with a `ViewModelStore` and its own `lifecycle`, accessible through `LocalViewModelStoreOwner` and `LocalLifecycleOwner`. Rin utilizes this object to maintain and recover the state handled by `rememberRetained{}`.
 
+### Difference with ViewModel
+
+The difference between `rememberRetained{}` and ViewModel is that `rememberRetained{}` clears the stored state when its composition is removed from the screen. In contrast, ViewModel retains the saved state even after its composition disappears from the screen, until the screen itself is closed.
+
+### Difference with remember{}
+
+The difference between `rememberRetained{}` and `remember{}` is that `rememberRetained{}` retains the state across configuration changes and keeps the data even when the screen moves to the back stack.
+
+### Example
+
+```kotlin
+@Composable
+fun ScreenA() {
+  var isB by rememberRetained{ mutableStateOf(true) }
+  rememberRetained{ "A" }
+  if(isB) {
+    rememberRetained{ "B" }
+  } else {
+    rememberRetained{ "C" }
+  }
+}
+```
+
+Using `remember{}`:
+
+```
+Switch isB
+-> B will be removed. C will be saved
+
+Move to ScreenB
+-> **A, B, C will be removed**
+```
+
+Using ViewModel:
+
+```
+Switch isB
+-> B **will not** be removed. C will be saved
+
+Move to ScreenB
+-> A, B, C will not be removed
+```
+
+Using `rememberRetained{}`:
+
+```
+Switch isB
+-> B will be removed. C will be saved
+
+Move to ScreenB
+-> A, C will not be removed
+```
+
 ## Credits
 
 - [Circuit](https://slackhq.github.io/circuit/) by Slack
