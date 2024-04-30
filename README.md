@@ -73,6 +73,8 @@ Move to ScreenB
 -> A, C will not be removed
 ```
 
+You can check the [full test code](rin/src/androidInstrumentedTest/kotlin/io/github/takahirom/rin/RinBehaviorTest.kt) for more details.
+
 ## Credits
 
 - [Circuit](https://slackhq.github.io/circuit/) by Slack
