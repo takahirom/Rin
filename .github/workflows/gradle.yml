@@ -53,5 +53,5 @@ jobs:
     - name: Upload Test Report
       uses: actions/upload-artifact@v2
       with:
-        name: test-results
+        name: test-results-${{ matrix.target }}
         path: '**/build/test-results/**'
