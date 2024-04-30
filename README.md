@@ -50,7 +50,7 @@ Switch isB
 -> B will be removed. C will be saved
 
 Move to ScreenB
--> **A, B, C will be removed**
+-> **A, C will be removed**
 ```
 
 Using ViewModel:
@@ -72,6 +72,8 @@ Switch isB
 Move to ScreenB
 -> A, C will not be removed
 ```
+
+You can check the [full test code](rin/src/androidInstrumentedTest/kotlin/io/github/takahirom/rin/RinBehaviorTest.kt) for more details.
 
 ## Credits
 

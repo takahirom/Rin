@@ -50,3 +50,8 @@ jobs:
       uses: gradle/gradle-build-action@ce999babab2de1c4b649dc15f0ee67e6246c994f
       with:
         arguments: ${{ matrix.target }}
+    - name: Upload Test Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results-${{ matrix.target }}
+        path: '**/build/test-results/**'
