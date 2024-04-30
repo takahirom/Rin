@@ -28,7 +28,7 @@ The difference between `rememberRetained{}` and ViewModel is that `rememberRetai
 
 The difference between `rememberRetained{}` and `remember{}` is that `rememberRetained{}` retains the state across configuration changes and keeps the data even when the screen moves to the back stack.
 
-### Example
+### Behavior Example
 
 ```kotlin
 @Composable
