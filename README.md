@@ -50,7 +50,7 @@ Switch isB
 -> B will be removed. C will be saved
 
 Move to ScreenB
--> **A, B, C will be removed**
+-> **A, C will be removed**
 ```
 
 Using ViewModel:
