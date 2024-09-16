@@ -51,7 +51,7 @@ jobs:
       with:
         arguments: ${{ matrix.target }}
     - name: Upload Test Report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ matrix.target }}
         path: '**/build/test-results/**'

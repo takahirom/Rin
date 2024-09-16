@@ -43,7 +43,7 @@ jobs:
         heap-size: 600M
         script: ./gradlew connectedDebugAndroidTest --daemon
     - name: Upload Test Report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: test-results
         path: '**/build/test-results/**'
