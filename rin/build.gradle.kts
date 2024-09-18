@@ -7,21 +7,6 @@ plugins {
     id("module.publication")
 }
 
-configurations.all {
-    resolutionStrategy.eachDependency {
-        if (requested.group == "androidx.core" && requested.name == "core-ktx") {
-            useVersion("1.12.0")
-        }
-        if (requested.group == "androidx.compose.ui" && requested.name == "ui") {
-            useVersion("1.7.0-alpha05")
-        }
-        if (requested.group == "androidx.compose.material" && requested.name == "material") {
-            useVersion("1.7.0-alpha05")
-        }
-    }
-}
-
-
 kotlin {
     applyDefaultHierarchyTemplate()
     jvm()
