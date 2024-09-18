@@ -7,5 +7,6 @@ plugins {
 
 buildscript {
     dependencies {
+        classpath(libs.compose.jb.gradle.plugin)
     }
 }
