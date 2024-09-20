@@ -9,6 +9,13 @@ plugins {
 
 kotlin {
     applyDefaultHierarchyTemplate()
+
+    // darwin
+    iosArm64()
+    iosSimulatorArm64()
+    iosX64()
+
+    // Java bytecode
     jvm()
     androidTarget {
         publishLibraryVariants("release")
@@ -18,10 +25,15 @@ kotlin {
             }
         }
     }
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-//    linuxX64()
+
+    // JS
+    js {
+        browser()
+    }
+    wasmJs {
+        browser()
+    }
+
     val compose = extensions.get("compose") as org.jetbrains.compose.ComposeExtension
     sourceSets {
         val commonMain by getting {
