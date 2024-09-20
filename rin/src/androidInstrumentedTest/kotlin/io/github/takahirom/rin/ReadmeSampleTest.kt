@@ -1,5 +1,6 @@
-package io.github.takahirom.rin
-
+// Copyright (C) 2024 takahirom
+// Copyright (C) 2022 Slack Technologies, LLC
+// SPDX-License-Identifier: Apache-2.0
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
