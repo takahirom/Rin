@@ -33,6 +33,10 @@ publishing {
                     id.set("takahirom")
                     name.set("takahirom")
                 }
+                developer {
+                    id.set("slack")
+                    name.set("Slack Technologies, LLC")
+                }
             }
             scm {
                 url.set("https://github.com/takahirom/Rin")
