@@ -1,72 +1,23 @@
+// Copyright (C) 2024 takahirom
+// Copyright (C) 2022 Slack Technologies, LLC
+// SPDX-License-Identifier: Apache-2.0
 package io.github.takahirom.rin
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisallowComposableCalls
+import androidx.compose.runtime.RememberObserver
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.currentCompositeKeyHash
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.viewModelFactory
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 var RIN_DEBUG = false
-
-private class ProduceRetainedStateScopeImpl<T>(
-    state: MutableState<T>,
-    override val coroutineContext: CoroutineContext,
-) : ProduceStateScope<T>, MutableState<T> by state {
-
-    override suspend fun awaitDispose(onDispose: () -> Unit): Nothing {
-        try {
-            suspendCancellableCoroutine<Nothing> {}
-        } finally {
-            onDispose()
-        }
-    }
-}
-
-@Composable
-public fun <T> produceRetainedState(
-    initialValue: T,
-    producer: suspend ProduceStateScope<T>.() -> Unit,
-): State<T> {
-    val result = rememberRetained { mutableStateOf(initialValue) }
-    LaunchedEffect(Unit) { ProduceRetainedStateScopeImpl(result, coroutineContext).producer() }
-    return result
-}
-
-@Composable
-public fun <T : R, R> Flow<T>.collectAsRetainedState(
-    initial: R,
-    context: CoroutineContext = EmptyCoroutineContext,
-): State<R> =
-    produceRetainedState(initial, this, context) {
-        if (context == EmptyCoroutineContext) {
-            collect { value = it }
-        } else withContext(context) { collect { value = it } }
-    }
-
-@Composable
-public fun <T> produceRetainedState(
-    initialValue: T,
-    key1: Any?,
-    key2: Any?,
-    producer: suspend ProduceStateScope<T>.() -> Unit,
-): State<T> {
-    val result = rememberRetained { mutableStateOf(initialValue) }
-    LaunchedEffect(key1, key2) { ProduceRetainedStateScopeImpl(result, coroutineContext).producer() }
-    return result
-}
-
-@Composable
-public fun <T> StateFlow<T>.collectAsRetainedState(
-    context: CoroutineContext = EmptyCoroutineContext
-): State<T> = collectAsRetainedState(value, context)
 
 interface RetainedObserver {
     fun onRemembered()
