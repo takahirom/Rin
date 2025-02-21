@@ -66,6 +66,7 @@ kotlin {
                 implementation(compose.dependencies.uiTest)
                 implementation(libs.truth)
                 implementation(libs.leakcanary.android.instrumentation)
+                implementation(libs.androidx.test.uiautomator)
             }
         }
 

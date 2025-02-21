@@ -36,6 +36,7 @@ molecule-runtime = { module = "app.cash.molecule:molecule-runtime", version = "1
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 truth = "com.google.truth:truth:1.4.2"
 junit = "junit:junit:4.13.2"
+androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version = "2.3.0" }
 
 # debug
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
