@@ -16,6 +16,8 @@ jobs:
         include:
           - target: iosSimulatorArm64Test
             os: macos-latest
+          - target: macosArm64Test
+            os: macos-latest
           - target: jvmTest
             os: ubuntu-latest
 #          - target: linuxX64Test
@@ -29,7 +31,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Validate Gradle Wrapper
-      uses: gradle/wrapper-validation-action@v1
+      uses: gradle/actions/wrapper-validation@v4
     - uses: actions/cache@v3
       with:
         path: |
