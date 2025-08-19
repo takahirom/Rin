@@ -14,6 +14,8 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
     iosX64()
+    macosArm64()
+    macosX64()
 
     // Java bytecode
     jvm()
@@ -70,6 +72,15 @@ kotlin {
         }
 
         @OptIn(ExperimentalComposeLibrary::class) val iosTest by getting {
+            dependencies {
+                implementation(compose.dependencies.uiTest)
+                implementation(libs.jetbrains.androidx.navigation.compose)
+                implementation(compose.dependencies.material3)
+                implementation(libs.molecule.runtime)
+            }
+        }
+
+        @OptIn(ExperimentalComposeLibrary::class) val macosTest by getting {
             dependencies {
                 implementation(compose.dependencies.uiTest)
                 implementation(libs.jetbrains.androidx.navigation.compose)
