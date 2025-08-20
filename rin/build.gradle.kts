@@ -1,10 +1,12 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import com.vanniktech.maven.publish.SonatypeHost
+import com.vanniktech.maven.publish.KotlinMultiplatform
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     id("org.jetbrains.compose")
-    id("module.publication")
+    id("com.vanniktech.maven.publish")
 }
 
 kotlin {
@@ -99,7 +101,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // For testing, without this, the test will fail with the error:
         // new target SDK 21 doesn't support runtime permissions but the old target SDK 24 does
-        targetSdkVersion(libs.versions.android.targetSdk.get().toInt())
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
     }
     // Wait for AGP update
 //    testOptions {
@@ -115,4 +117,37 @@ android {
 //            }
 //        }
 //    }
+}
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+    
+    configure(KotlinMultiplatform())
+    
+    pom {
+        name.set("Rin")
+        description.set("This library enhances Compose Multiplatform by enabling the use of `rememberRetained{}`, which is stored within ViewModel. It broadens the versatility of Compose, allowing it to be utilized in a wider array of contexts and scenarios.")
+        url.set("https://github.com/takahirom/Rin")
+        
+        licenses {
+            license {
+                name.set("Apache License 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0")
+            }
+        }
+        developers {
+            developer {
+                id.set("takahirom")
+                name.set("takahirom")
+            }
+            developer {
+                id.set("slack")
+                name.set("Slack Technologies, LLC")
+            }
+        }
+        scm {
+            url.set("https://github.com/takahirom/Rin")
+        }
+    }
 }
