@@ -1,7 +1,7 @@
 [versions]
 agp = "8.9.0"
 kotlin = "1.9.23"
-nexus-publish = "2.0.0"
+maven-publish = "0.31.0"
 android-minSdk = "21"
 android-compileSdk = "34"
 android-targetSdk = "32"
@@ -46,7 +46,7 @@ kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-p
 compose-jb-gradle-plugin = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "compose-jb" }
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 
-nexus-publish = { module = "io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin", version.ref = "nexus-publish" }
+# Removed - using com.vanniktech.maven.publish instead
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
