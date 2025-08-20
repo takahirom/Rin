@@ -21,6 +21,8 @@ jobs:
     uses: ./.github/workflows/gradle.yml
   deploy:
     needs: build
+    environment:
+      name: maven-central
     strategy:
       matrix:
         include:
