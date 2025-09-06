@@ -14,4 +14,8 @@ allprojects {
 // CodeQL task for root project
 project.tasks.create("testClasses") {
     dependsOn("allTests")
+    doLast {
+        val result = 1 + 1
+        println("Test calculation: $result")
+    }
 }
