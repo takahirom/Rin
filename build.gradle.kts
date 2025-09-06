@@ -10,3 +10,8 @@ allprojects {
     group = "io.github.takahirom.rin"
     version = "0.4.0"
 }
+
+// CodeQL task for root project
+project.tasks.create("testClasses") {
+    dependsOn("allTests")
+}
