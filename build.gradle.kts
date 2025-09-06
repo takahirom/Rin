@@ -13,5 +13,5 @@ allprojects {
 
 // CodeQL task for root project
 project.tasks.create("testClasses") {
-    dependsOn("allTests")
+    dependsOn(":rin:allTests")
 }
